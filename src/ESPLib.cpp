@@ -12,6 +12,15 @@
 #elif defined(ESP8266)
 #include <ESP8266WiFi.h>
 #endif
+
+uint8_t getChipCores()
+{
+#if defined(ESP32)
+    return ESP.getChipCores();
+#elif defined(ESP8266)
+    return 1;
+#endif
+}
 uint32_t getChipId()
 {
 #if defined(ESP32)
@@ -25,16 +34,61 @@ uint32_t getChipId()
     return ESP.getChipId();
 #endif
 }
-
-uint8_t getChipCores()
+String getChipModel()
 {
 #if defined(ESP32)
-    return ESP.getChipCores();
+    ESP.getChipModel();
 #elif defined(ESP8266)
-    return 1;
+    return ""; // ToDo Implement
+#endif
+}
+uint8_t getChipRevision()
+{
+#if defined(ESP32)
+    ESP.getChipRevision();
+#elif defined(ESP8266)
+    return 1; // ToDo Implement
 #endif
 }
 
+uint32_t getCpuFreqMHz()
+{
+    return ESP.getCpuFreqMHz();
+}
+
+uint8_t getFlashChipVendorId()
+{
+#if defined(ESP32)
+    return g_rom_flashchip.device_id;
+#elif defined(ESP8266)
+    return ESP.getFlashChipVendorId();
+#endif
+}
+String getFlashChipMode()
+{
+return String(ESP.getFlashChipMode());
+}
+uint32_t getFlashChipRealSize()
+{
+#if defined(ESP32)
+    return spi_flash_get_chip_size();
+#elif defined(ESP8266)
+    return ESP.getFlashChipRealSize();
+#endif
+}
+uint32_t getFlashChipSize()
+{
+return ESP.getFlashChipSize();
+}
+uint32_t  getFlashChipSpeed()
+{
+return ESP.getFlashChipSpeed();
+}
+
+String getSDKVersion()
+{
+    return ESP.getSdkVersion();
+}
 String getFullVersion()
 {
 #if defined(ESP32)
@@ -49,21 +103,46 @@ String getFullVersion()
 #endif
 }
 
-uint8_t getFlashChipVendorId()
+uint32_t getHeapSize()
 {
-#if defined(ESP32)
-    return g_rom_flashchip.device_id;
+    #if defined(ESP32)
+    return ESP.getHeapSize();
 #elif defined(ESP8266)
-    return ESP.getFlashChipVendorId();
+    static uint32_t myfree;
+    static uint16_t mymax;
+    static uint8_t myfrag;
+    ESP.getHeapStats(&myfree, &mymax, &myfrag);
+    return mymax;
+#endif
+}
+uint32_t getFreeHeap()
+{
+    return ESP.getFreeHeap();
+}
+
+uint32_t getPsramSize()
+{
+    #if defined(ESP32)
+    return ESP.getPsramSize();
+#elif defined(ESP8266)
+    return 0;
+#endif
+}
+uint32_t getFreePsram()
+{
+    #if defined(ESP32)
+    return ESP.getFreePsram();
+#elif defined(ESP8266)
+    return 0;
 #endif
 }
 
-uint32_t getFlashChipRealSize()
+uint32_t getRandom()
 {
 #if defined(ESP32)
-    return spi_flash_get_chip_size();
+    return esp_random();
 #elif defined(ESP8266)
-    return ESP.getFlashChipRealSize();
+    return ESP.random();
 #endif
 }
 
@@ -124,7 +203,6 @@ String getResetInfo()
     return ESP.getResetInfo();
 #endif
 }
-
 String getResetReason()
 {
 #if defined(ESP32)
@@ -182,16 +260,6 @@ String getResetReason()
     return ESP.getResetReason();
 #endif
 }
-
-uint32_t getRandom()
-{
-#if defined(ESP32)
-    return esp_random();
-#elif defined(ESP8266)
-    return ESP.random();
-#endif
-}
-
 void reset()
 {
 #if defined(ESP32)
@@ -199,6 +267,19 @@ void reset()
 #elif defined(ESP8266)
     ESP.reset();
 #endif
+}
+
+uint32_t getSketchSize()
+{
+    return ESP.getSketchSize();
+}
+uint32_t getFreeSketchSpace()
+{
+    return ESP.getFreeSketchSpace();
+}
+String getSketchMD5()
+{
+    return ESP.getSketchMD5();
 }
 
 boolean setMAC(uint8_t newMACAddress[])
