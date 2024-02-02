@@ -37,7 +37,7 @@ uint32_t getChipId()
 String getChipModel()
 {
 #if defined(ESP32)
-    ESP.getChipModel();
+    return ESP.getChipModel();
 #elif defined(ESP8266)
     return ""; // ToDo Implement
 #endif
@@ -45,7 +45,7 @@ String getChipModel()
 uint8_t getChipRevision()
 {
 #if defined(ESP32)
-    ESP.getChipRevision();
+    return ESP.getChipRevision();
 #elif defined(ESP8266)
     return 1; // ToDo Implement
 #endif
